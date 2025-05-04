@@ -1,0 +1,119 @@
+Login Page:
+
+
+index.jsp:
+
+<form action="login" method=post>
+	<h1 align = "center">Login Form</h1>
+	<div class="group">
+		<label for=userName>UserName</label>
+		<input name=userName type=text required>
+	</div>
+	<div class="group"> 
+		<label for=password>Password</label>
+		<input name=password type=password required>
+	</div>
+	<button>Login</button>
+</form>
+
+data.jsp:
+
+<div class = "data-container">
+	<h1>UserName: ${sessionScope.userName}</h1>
+	<h1>Password: ${sessionScope.password}</h1>	
+</div>
+
+style.css:
+
+@charset "UTF-8";
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.group {
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 20px;
+  color: purple;
+  margin-bottom: 5px;
+}
+
+input {
+  border-radius: 5px;
+  height: 30px;
+  border: 1px solid #000;
+  font-size: 20px;
+  padding: 8px 2px;
+}
+
+button {
+  border-radius: 5px;
+  height: 50px;
+  font-size: 25px;
+  color: #fff;
+  background: purple;
+  padding: 8px 2px;
+  margin-top: 15px;
+}
+
+button:hover {
+	background-color: indigo;
+}
+
+.data-container {
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.data-container h1 {
+  font-size: 24px;
+  color: purple;
+  margin: 10px 0;
+}
+
+web.xml:
+
+<servlet>
+	<servlet-name>LoginServlet</servlet-name>
+	<servlet-class>pkg.LoginServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>LoginServlet</servlet-name>
+	<url-pattern>/login</url-pattern>
+</servlet-mapping>
+
+LoginServlet:
+
+		String userName = request.getParameter("userName");
+		String password = request.getParameter("password");
+		
+//		PrintWriter out = response.getWriter();
+//		out.printf("Username: %s\n Password: %s", userName, password);
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("userName", userName);
+		session.setAttribute("password", password);
+		response.sendRedirect("data.jsp");

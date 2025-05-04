@@ -1,0 +1,109 @@
+Calculator:
+
+
+index.jsp:
+
+<form action="calculate" method=post>
+		<h1 align = "center">Calculator</h1>
+		<div>
+			<label for=num1>Number 1: </label>
+			<input type=number name=num1>
+		</div>
+		<div align = "center">
+			<select name=operator>
+				<option value=+>+</option>
+				<option value=->-</option>
+				<option value=*>*</option>
+				<option value="/">/</option>
+			</select>
+		</div>
+		<div>
+			<label for=num2>Number 2: </label>
+			<input type=number name=num2>
+		</div>
+		<button>Calculate</button>
+		<h2 align = "center">Result: ${result}</h2>
+</form>
+
+style.css:
+
+@charset "UTF-8";
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 30px gray;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, select, button {
+    font-size: 16px;
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+button {
+    background-color: purple;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: indigo;
+}
+
+web.xml:
+
+    <servlet>
+        <servlet-name>CalculatorServlet</servlet-name>
+        <servlet-class>pkg.CalculatorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CalculatorServlet</servlet-name>
+        <url-pattern>/calculate</url-pattern>
+    </servlet-mapping>
+
+CalculatorServlet:
+
+		String num1 = request.getParameter("num1");
+		String num2 = request.getParameter("num2");
+		String operator = request.getParameter("operator");
+		
+		double n1 = Double.parseDouble(num1);
+		double n2 = Double.parseDouble(num2);
+		
+		String ans = switch(operator) {
+			case "+" -> String.valueOf(n1+n2);
+			case "-" -> String.valueOf(n1-n2);
+			case "*" -> String.valueOf(n1*n2);
+			case "/" -> {
+				if(n2 == 0) yield "Infinity";
+				else yield String.valueOf(n1/n2);
+			}
+ 			default -> "Error has occured";
+		};
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("result", ans);
+		response.sendRedirect("index.jsp");
